@@ -1,6 +1,5 @@
 <?php
 global $ttfmake_section_data;
-
 $video_url = $ttfmake_section_data['video-url'];
 ?>
 
