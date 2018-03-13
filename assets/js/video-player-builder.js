@@ -1,3 +1,65 @@
+( function( $, _, Backbone, builderSettings, sectionData ) {
+
+	var Model = Backbone.Model.extend( {
+		defaults: function() {
+			return _.extend( {}, sectionData.defaults['video-player'], {
+				id: _.uniqueId( 'video-player_' ),
+			} );
+		},
+	} );
+
+	var View = make.classes.SectionView.extend( {
+		template: wp.template( 'ttfmake-section-video-player' ),
+
+		initialize: function() {
+			make.classes.SectionView.prototype.initialize.apply( this, arguments );
+
+			this.listenTo( this.model, 'change:video-url', this.refresh );
+		},
+
+		afterRender: function() {
+			this.refresh();
+		},
+
+		// A simple example of view logic. Toggles the preview iframe,
+    // if the video-url field is empty.
+    refresh: function() {
+      var $iframe = $( 'iframe', this.$el );
+      var $notice = $( '.make-video-player-notice', this.$el );
+      var videoUrl = this.model.get('video-url');
+
+      if ( videoUrl !== '' ) {
+        $notice.hide();
+        $iframe.attr( 'src', videoUrl );
+        $iframe.show();
+      } else {
+        $notice.show();
+        $iframe.hide();
+      }
+    }
+
+	} );
+
+	make.factory.model = _.wrap( make.factory.model, function( func, attrs, BaseClass ) {
+		switch ( attrs[ 'section-type' ] ) {
+			case 'video-player': BaseClass = Model; break;
+		}
+
+		return func( attrs, BaseClass );
+	} );
+
+	make.factory.view = _.wrap( make.factory.view, function( func, options, BaseClass ) {
+		switch ( options.model.get( 'section-type' ) ) {
+			case 'video-player': BaseClass = View; break;
+		}
+
+		return func( options, BaseClass );
+	} );
+
+} ) ( jQuery, _, Backbone, ttfmakeBuilderSettings, ttfMakeSections );
+
+
+/*
 (function (window, Backbone, $, _, oneApp) {
   // Model and View classes for the Builder side of this section.
 
@@ -49,3 +111,4 @@
   });
 
 })(window, Backbone, jQuery, _, oneApp);
+*/

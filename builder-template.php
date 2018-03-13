@@ -12,6 +12,4 @@ global $ttfmake_section_data;
 
 <iframe src="" frameborder="0" allowfullscreen style="display: none;"></iframe>
 
-<?php
-// Load common partials for this section.
-ttfmake_load_section_footer();
+<?php ttfmake_load_section_footer(); ?>
